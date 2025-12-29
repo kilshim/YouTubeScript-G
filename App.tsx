@@ -24,6 +24,10 @@ const KeyIcon = () => (
   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" /></svg>
 );
 
+const GlobeIcon = () => (
+  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" /></svg>
+);
+
 const RefreshIcon = () => (
   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
 );
@@ -107,8 +111,6 @@ const App: React.FC = () => {
   };
 
   const handleClearKey = () => {
-    // window.confirm causes issues in some environments.
-    // Removing it to ensure the delete action is executed reliably.
     localStorage.removeItem('gemini_api_key');
     setHasKey(false);
     setInputKey('');
@@ -158,15 +160,10 @@ const App: React.FC = () => {
     }
   };
 
-  /**
-   * Centralized API error handler
-   */
   const handleApiError = useCallback(async (error: any, defaultMessage: string) => {
     console.error(error);
     if (error.message?.includes("API key not valid") || error.message?.includes("key not found")) {
       alert('API 키가 유효하지 않습니다. 키를 확인해주세요.');
-      // Do not setHasKey(false) here, so the user can still see the delete button to clear the bad key.
-      // Instead, just open the modal.
       setShowKeyModal(true);
     } else {
       alert(defaultMessage + " (API 키 상태를 확인해주세요)");
@@ -316,6 +313,19 @@ const App: React.FC = () => {
         </nav>
 
         <div className="mt-auto space-y-3">
+          {/* Brand Website Link */}
+          <a 
+            href="https://xn--design-hl6wo12cquiba7767a.com/" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="w-full flex items-center gap-3 p-3 rounded-xl bg-slate-900 text-white hover:bg-slate-800 transition-all shadow-md group active:scale-95"
+          >
+            <div className="p-2 rounded-lg bg-white/10 group-hover:bg-white/20">
+              <GlobeIcon />
+            </div>
+            <span className="text-[11px] font-bold tracking-tight">떨림과울림Design</span>
+          </a>
+
           <div className={`p-4 rounded-2xl border transition-all ${hasKey ? 'bg-green-50 border-green-100' : 'bg-orange-50 border-orange-100'}`}>
             <div className="flex items-center gap-3 mb-2">
               <div className={`p-2 rounded-lg ${hasKey ? 'bg-green-500 text-white' : 'bg-orange-500 text-white'}`}>
@@ -335,6 +345,7 @@ const App: React.FC = () => {
               {hasKey ? 'API 키 변경/삭제' : 'API 키 설정하기'}
             </button>
           </div>
+          
           <button 
             onClick={reset}
             className="w-full flex items-center justify-center gap-2 p-4 bg-slate-100 hover:bg-slate-900 hover:text-white text-slate-600 rounded-2xl font-bold transition-all shadow-sm active:scale-95"
@@ -643,8 +654,6 @@ const App: React.FC = () => {
             </div>
             
             <div className="space-y-8">
-              
-              {/* Intro Box */}
               <div className="p-6 bg-slate-50 rounded-3xl border border-slate-100">
                  <h3 className="font-bold text-slate-800 text-lg mb-2">👋 안녕하세요, 크리에이터님!</h3>
                  <p className="text-slate-600 text-sm leading-relaxed">
@@ -653,7 +662,6 @@ const App: React.FC = () => {
                  </p>
               </div>
 
-              {/* Steps */}
               <div className="space-y-6">
                 <div className="flex gap-5">
                   <div className="flex-shrink-0 w-12 h-12 rounded-2xl bg-indigo-600 text-white flex items-center justify-center font-bold text-lg shadow-lg shadow-indigo-200">1</div>
@@ -686,7 +694,6 @@ const App: React.FC = () => {
                 </div>
               </div>
 
-              {/* API Key Note */}
                <div className="p-5 bg-orange-50 rounded-2xl border border-orange-100 flex gap-4 items-start">
                 <div className="mt-1 text-orange-500 flex-shrink-0">
                   <KeyIcon />
